@@ -1,11 +1,11 @@
-import { Service } from "@ai16z/eliza/src/types.ts";
+import { Service } from "@ai16z/eliza";
 import {
     IAgentRuntime,
     ITranscriptionService,
     Media,
     ServiceType,
-} from "@ai16z/eliza/src/types.ts";
-import { stringToUuid } from "@ai16z/eliza/src/uuid.ts";
+} from "@ai16z/eliza";
+import { stringToUuid } from "@ai16z/eliza";
 import ffmpeg from "fluent-ffmpeg";
 import fs from "fs";
 import path from "path";
@@ -21,6 +21,8 @@ export class VideoService extends Service {
         super();
         this.ensureCacheDirectoryExists();
     }
+
+    async initialize(runtime: IAgentRuntime): Promise<void> {}
 
     private ensureCacheDirectoryExists() {
         if (!fs.existsSync(this.CONTENT_CACHE_DIR)) {
@@ -327,10 +329,15 @@ export class VideoService extends Service {
 
         console.log("Starting transcription...");
         const startTime = Date.now();
-        const transcript = await runtime
-            .getService(ServiceType.TRANSCRIPTION)
-            .getInstance<ITranscriptionService>()
-            .transcribe(audioBuffer);
+        const transcriptionService = runtime
+            .getService<ITranscriptionService>(ServiceType.TRANSCRIPTION)
+            .getInstance();
+        if (!transcriptionService) {
+            throw new Error("Transcription service not found");
+        }
+
+        const transcript = await transcriptionService.transcribe(audioBuffer);
+
         const endTime = Date.now();
         console.log(
             `Transcription completed in ${(endTime - startTime) / 1000} seconds`

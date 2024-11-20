@@ -1,11 +1,7 @@
-import { embeddingZeroVector } from "@ai16z/eliza/src/memory.ts";
-import {
-    Character,
-    Client as ElizaClient,
-    IAgentRuntime,
-} from "@ai16z/eliza/src/types.ts";
-import { stringToUuid } from "@ai16z/eliza/src/uuid.ts";
-import { elizaLogger } from "@ai16z/eliza/src/logger.ts";
+import { embeddingZeroVector } from "@ai16z/eliza";
+import { Character, Client as ElizaClient, IAgentRuntime } from "@ai16z/eliza";
+import { stringToUuid } from "@ai16z/eliza";
+import { elizaLogger } from "@ai16z/eliza";
 import {
     Client,
     Events,
@@ -29,8 +25,8 @@ import { VoiceManager } from "./voice.ts";
 
 export class DiscordClient extends EventEmitter {
     apiToken: string;
-    private client: Client;
-    private runtime: IAgentRuntime;
+    client: Client;
+    runtime: IAgentRuntime;
     character: Character;
     private messageManager: MessageManager;
     private voiceManager: VoiceManager;
@@ -72,7 +68,6 @@ export class DiscordClient extends EventEmitter {
         this.runtime.registerAction(chat_with_attachments);
         this.runtime.registerAction(transcribe_media);
         this.runtime.registerAction(download_media);
-
 
         this.runtime.providers.push(channelStateProvider);
         this.runtime.providers.push(voiceStateProvider);
@@ -198,7 +193,7 @@ export class DiscordClient extends EventEmitter {
     }
 
     async handleReactionRemove(reaction: MessageReaction, user: User) {
-        console.log("Reaction removed");
+        elizaLogger.log("Reaction removed");
         // if (user.bot) return;
 
         let emoji = reaction.emoji.name;

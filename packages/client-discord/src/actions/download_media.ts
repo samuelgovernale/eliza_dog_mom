@@ -1,6 +1,6 @@
 import path from "path";
-import { composeContext } from "@ai16z/eliza/src/context.ts";
-import { parseJSONObjectFromText } from "@ai16z/eliza/src/parsing.ts";
+import { composeContext } from "@ai16z/eliza";
+import { parseJSONObjectFromText } from "@ai16z/eliza";
 import {
     Action,
     ActionExample,
@@ -13,9 +13,8 @@ import {
     Service,
     ServiceType,
     State,
-} from "@ai16z/eliza/src/types.ts";
-import { VideoService } from "@ai16z/plugin-node/src/services/video.ts";
-import { generateText } from "@ai16z/eliza/src/generation.ts";
+} from "@ai16z/eliza";
+import { generateText } from "@ai16z/eliza";
 
 export const mediaUrlTemplate = `# Messages we are searching for a media URL
 {{recentMessages}}
@@ -87,8 +86,8 @@ export default {
         callback: HandlerCallback
     ) => {
         const videoService = runtime
-            .getService(ServiceType.VIDEO)
-            .getInstance<IVideoService>();
+            .getService<IVideoService>(ServiceType.VIDEO)
+            .getInstance();
         if (!state) {
             state = (await runtime.composeState(message)) as State;
         }
